@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>알바 권리 지킴이</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .menu-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-card:hover {
+            border-color: #0d6efd;
+            box-shadow: 0 4px 12px rgba(13,110,253,0.15);
+            transform: translateY(-2px);
+        }
+
+        .menu-card.active {
+            border-color: #0d6efd;
+            background: #f0f7ff;
+        }
+
+        .menu-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .menu-desc {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            transition: border-color 0.15s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0b5ed7;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .result-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .result-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .result-table {
+            width: 100%;
+            border-top: 1px solid #dee2e6;
+            padding-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .result-table tr {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+
+        .result-table td:first-child {
+            color: #6c757d;
+        }
+
+        .total-box {
+            background: #e7f3ff;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .total-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0d6efd;
+        }
+
+        .total-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #0d6efd;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-text {
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .alert-law {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        textarea.form-control {
+            min-height: 200px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .section-header-icon {
+            font-size: 20px;
+        }
+
+        .fired-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .btn-group {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>알바 권리 지킴이</h1>
+            <p>아르바이트생을 위한 근로권리 도우미</p>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-card" onclick="showSection('salary')">
+                <div class="menu-icon">💰</div>
+                <div class="menu-title">급여 계산</div>
+                <div class="menu-desc">월급/퇴직금 계산 및 근로시간 점검</div>
+            </div>
+
+            <div class="menu-card" onclick="showSection('contract')">
+                <div class="menu-icon">📄</div>
+                <div class="menu-title">근로계약서 검토</div>
+                <div class="menu-desc">필수 항목 및 부당 조항 확인</div>
+            </div>
+
+            <div class="menu-card" onclick="showSection('condition')">
+                <div class="menu-icon">🛡️</div>
+                <div class="menu-title">근로조건 점검</div>
+                <div class="menu-desc">휴게시간 및 해고 절차 검토</div>
+            </div>
+        </div>
+
+        <!-- 급여 계산 섹션 -->
+        <div id="salary-section" class="section">
+            <div class="card">
+                <h2>근로자 정보</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">이름</label>
+                    <input type="text" id="worker-name" class="form-control" placeholder="홍길동">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">계산할 년도</label>
+                        <input type="number" id="calc-year" class="form-control" value="2026" min="2020" max="2030">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">계산할 월</label>
+                        <select id="calc-month" class="form-control">
+                            <option value="1">1월</option>
+                            <option value="2">2월</option>
+                            <option value="3">3월</option>
+                            <option value="4">4월</option>
+                            <option value="5">5월</option>
+                            <option value="6">6월</option>
+                            <option value="7">7월</option>
+                            <option value="8">8월</option>
+                            <option value="9">9월</option>
+                            <option value="10">10월</option>
+                            <option value="11">11월</option>
+                            <option value="12">12월</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">시급 (원)</label>
+                        <input type="number" id="hourly-wage" class="form-control" value="10320">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">하루 근무시간</label>
+                        <input type="number" id="daily-hours" class="form-control" value="4" step="0.5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">근무요일</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="월" class="work-days"> 월
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="화" class="work-days"> 화
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="수" class="work-days"> 수
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="목" class="work-days"> 목
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="금" class="work-days"> 금
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="토" class="work-days"> 토
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="일" class="work-days"> 일
+                        </label>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="calculateSalary()">💰 월급 계산</button>
+                    <button class="btn btn-primary" onclick="checkWorkHour()">⏰ 근로시간 점검</button>
+                </div>
+            </div>
+
+            <div id="salary-result"></div>
+            <div id="workhour-result"></div>
+        </div>
+
+        <!-- 근로계약서 검토 섹션 -->
+        <div id="contract-section" class="section">
+            <div class="card">
+                <h2>근로계약서 내용 입력</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">계약서 내용을 붙여넣으세요</label>
+                    <textarea id="contract-text" class="form-control" placeholder="근로계약서 내용을 여기에 붙여넣으세요.
+예시:
+- 근로계약기간: 2026년 1월 1일 ~ 2026년 12월 31일
+- 근무장소: 서울시 강남구
+- 시급: 10,320원
+- 근무시간: 9:00 ~ 13:00"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="analyzeContract()">🔍 계약서 분석</button>
+            </div>
+
+            <div id="contract-result"></div>
+        </div>
+
+        <!-- 근로조건 점검 섹션 -->
+        <div id="condition-section" class="section">
+            <div class="card">
+                <h2>근로조건 정보</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">하루 근무시간</label>
+                        <input type="number" id="cond-work-hours" class="form-control" value="8" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">휴게시간 (분)</label>
+                        <input type="number" id="cond-break-time" class="form-control" value="30">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="is-fired" onchange="toggleFiredInfo()">
+                        해고 통보를 받았습니다
+                    </label>
+                </div>
+
+                <div id="fired-info" class="fired-info" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">해고 예고 기간 (일)</label>
+                        <input type="number" id="notice-days" class="form-control" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">해고 통보 방식</label>
+                        <select id="notice-method" class="form-control">
+                            <option value="">선택하세요</option>
+                            <option value="서면">서면</option>
+                            <option value="구두">구두</option>
+                            <option value="전화">전화</option>
+                            <option value="문자">문자</option>
+                            <option value="이메일">이메일</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">해고 사유</label>
+                        <textarea id="dismissal-reason" class="form-control" placeholder="해고 사유를 입력하세요" style="min-height: 100px;"></textarea>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="checkCondition()">🛡️ 근로조건 점검</button>
+            </div>
+
+            <div id="condition-result"></div>
+        </div>
+    </div>
+
+    <script>
+        const MIN_WAGE = 10320;
+
+        // 페이지 로드 시 현재 월 자동 선택
+        window.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            document.getElementById('calc-month').value = today.getMonth() + 1;
+        });
+
+        function showSection(section) {
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
+            
+            // 선택된 섹션 보이기
+            document.getElementById(section + '-section').classList.add('active');
+            
+            // 결과 초기화
+            document.getElementById('salary-result').innerHTML = '';
+            document.getElementById('workhour-result').innerHTML = '';
+            document.getElementById('contract-result').innerHTML = '';
+            document.getElementById('condition-result').innerHTML = '';
+        }
+
+        function toggleFiredInfo() {
+            const checked = document.getElementById('is-fired').checked;
+            document.getElementById('fired-info').style.display = checked ? 'block' : 'none';
+        }
+
+        function calculateSalary() {
+            const name = document.getElementById('worker-name').value || '근로자';
+            const wage = parseInt(document.getElementById('hourly-wage').value);
+            const dailyHours = parseFloat(document.getElementById('daily-hours').value);
+            const workDays = Array.from(document.querySelectorAll('.work-days:checked')).map(cb => cb.value);
+
+            if (workDays.length === 0) {
+                alert('근무요일을 선택해주세요.');
+                return;
+            }
+
+            const year = parseInt(document.getElementById('calc-year').value);
+            const month = parseInt(document.getElementById('calc-month').value);
+            
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const dayMap = {'월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6, '일': 0};
+            
+            let workDayCount = 0;
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month - 1, day);
+                const dayOfWeek = date.getDay();
+                for (let wd of workDays) {
+                    if (dayMap[wd] === dayOfWeek) {
+                        workDayCount++;
+                        break;
+                    }
+                }
+            }
+
+            const totalHours = workDayCount * dailyHours;
+            const basePay = wage * totalHours;
+            
+            const weeklyHours = workDays.length * dailyHours;
+            let weeklyPay = 0;
+            if (weeklyHours >= 15) {
+                weeklyPay = (weeklyHours / 40) * 8 * wage * 4;
+            }
+            
+            const totalPay = basePay + weeklyPay;
+
+            const resultHTML = `
+                <div class="result-card">
+                    <h3>${year}년 ${month}월 급여 명세</h3>
+                    
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">근무일수</div>
+                            <div class="stat-value">${workDayCount}일</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">총 근무시간</div>
+                            <div class="stat-value">${Math.round(totalHours)}시간</div>
+                        </div>
+                    </div>
+
+                    <table class="result-table">
+                        <tr>
+                            <td>기본급</td>
+                            <td>${basePay.toLocaleString()}원</td>
+                        </tr>
+                        <tr>
+                            <td>주휴수당</td>
+                            <td>${Math.round(weeklyPay).toLocaleString()}원</td>
+                        </tr>
+                    </table>
+
+                    <div class="total-box">
+                        <span class="total-label">총 지급액</span>
+                        <span class="total-value">${Math.round(totalPay).toLocaleString()}원</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('salary-result').innerHTML = resultHTML;
+        }
+
+        function checkWorkHour() {
+            const wage = parseInt(document.getElementById('hourly-wage').value);
+            const dailyHours = parseFloat(document.getElementById('daily-hours').value);
+            const workDays = Array.from(document.querySelectorAll('.work-days:checked')).map(cb => cb.value);
+
+            if (workDays.length === 0) {
+                alert('근무요일을 선택해주세요.');
+                return;
+            }
+
+            const weeklyHours = workDays.length * dailyHours;
+            const overtimeHours = Math.max(0, weeklyHours - 40);
+            const overtimeOk = overtimeHours <= 12;
+            const wageOk = wage >= MIN_WAGE;
+
+            let violations = [];
+            if (!overtimeOk) {
+                violations.push({
+                    title: '연장근로 시간 초과',
+                    desc: `주 연장근로 ${overtimeHours}시간 (법정 한도 12시간 초과)`,
+                    law: '근로기준법 제53조 - 노동부 신고 가능'
+                });
+            }
+            if (!wageOk) {
+                violations.push({
+                    title: '최저임금 미달',
+                    desc: `현재 시급 ${wage.toLocaleString()}원 (최저시급 ${MIN_WAGE.toLocaleString()}원)`,
+                    law: '최저임금법 제6조 - 노동부 신고 가능'
+                });
+            }
+
+            let resultHTML = `
+                <div class="result-card">
+                    <h3>근로시간 점검 결과</h3>
+                    
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">주 근무시간</div>
+                            <div class="stat-value">${weeklyHours}시간</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">연장근로</div>
+                            <div class="stat-value">${overtimeHours}시간</div>
+                        </div>
+                    </div>
+            `;
+
+            if (violations.length === 0) {
+                resultHTML += `
+                    <div class="alert alert-success">
+                        <div class="alert-title">✅ 근로기준법 준수</div>
+                    </div>
+                `;
+            } else {
+                for (let v of violations) {
+                    resultHTML += `
+                        <div class="alert alert-danger">
+                            <div class="alert-title">${v.title}</div>
+                            <div class="alert-text">${v.desc}</div>
+                            <div class="alert-law">${v.law}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            resultHTML += `</div>`;
+            
+            document.getElementById('workhour-result').innerHTML = resultHTML;
+        }
+
+        function analyzeContract() {
+            const text = document.getElementById('contract-text').value.trim();
+            
+            if (!text) {
+                alert('계약서 내용을 입력해주세요.');
+                return;
+            }
+
+            const sentences = text.split(/[.\n]/).map(s => s.trim()).filter(s => s);
+
+            const requiredItems = [
+                {name: '근로계약기간', keywords: ['근로계약기간', '계약기간', '계약 기간', '기간의 정함', '기간제'], law: '근로기준법 제17조'},
+                {name: '근무장소', keywords: ['근무장소', '근무 장소', '사업장', '근로 장소'], law: '근로기준법 제17조'},
+                {name: '업무 내용', keywords: ['업무내용', '업무 내용', '담당업무', '직무', '직종'], law: '근로기준법 제17조'},
+                {name: '소정근로시간', keywords: ['소정근로시간', '근로시간', '근무시간', '시업', '종업'], law: '근로기준법 제17조/제50조'},
+                {name: '근무일/휴일', keywords: ['근무일', '휴일', '주휴일', '주휴', '휴무일'], law: '근로기준법 제55조'},
+                {name: '휴게시간', keywords: ['휴게시간', '휴게 시간', '휴식시간', '식사 시간'], law: '근로기준법 제54조'},
+                {name: '임금', keywords: ['임금', '시급', '월급', '급여', '시간급'], law: '근로기준법 제17조'},
+                {name: '연차유급휴가', keywords: ['연차', '유급휴가', '연차휴가'], law: '근로기준법 제60조'},
+                {name: '사회보험', keywords: ['사회보험', '국민연금', '건강보험', '고용보험', '4대보험'], law: '국민연금법·건강보험법'},
+                {name: '계약서 교부', keywords: ['교부', '서면 교부', '계약서 교부', '각 1부'], law: '근로기준법 제17조 제2항'}
+            ];
+
+            const illegalKeywords = [
+                {keywords: ['지각', '벌금', '지각비'], label: '지각 벌금 조항', law: '근로기준법 제20조 (무효)'},
+                {keywords: ['퇴직금 포기', '퇴직금 없음'], label: '퇴직금 포기 조항', law: '근로자퇴직급여보장법 제9조 (무효)'},
+                {keywords: ['위약금', '손해배상'], label: '위약금·손해배상 조항', law: '근로기준법 제20조 (무효)'},
+                {keywords: ['년 이상 근무', '의무 근무'], label: '강제 장기 근무 조항', law: '근로기준법 제20조'},
+                {keywords: ['최저시급 미만', '최저임금 미만'], label: '최저임금 미달', law: '최저임금법 제6조'},
+                {keywords: ['수당 없음', '수당 미지급'], label: '수당 미지급 조항', law: '근로기준법 제56조'}
+            ];
+
+            const missing = [];
+            for (let item of requiredItems) {
+                let found = false;
+                for (let line of sentences) {
+                    for (let kw of item.keywords) {
+                        if (line.includes(kw)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+                if (!found) missing.push(item);
+            }
+
+            const illegal = [];
+            for (let item of illegalKeywords) {
+                for (let line of sentences) {
+                    for (let kw of item.keywords) {
+                        if (line.includes(kw)) {
+                            illegal.push({item, line});
+                            break;
+                        }
+                    }
+                }
+            }
+
+            let resultHTML = `
+                <div class="result-card">
+                    <h3>계약서 분석 결과</h3>
+                    
+                    <div class="section-header">
+                        <span class="section-header-icon">⚠️</span>
+                        <span>누락된 필수 항목: ${missing.length}건</span>
+                    </div>
+            `;
+
+            if (missing.length === 0) {
+                resultHTML += `<div class="alert alert-success">모든 필수 항목이 포함되어 있습니다.</div>`;
+            } else {
+                for (let m of missing) {
+                    resultHTML += `
+                        <div class="alert alert-warning">
+                            <div class="alert-title">${m.name}</div>
+                            <div class="alert-law">${m.law}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            resultHTML += `
+                    <div class="section-header" style="margin-top: 20px;">
+                        <span class="section-header-icon">❌</span>
+                        <span>부당 조항: ${illegal.length}건</span>
+                    </div>
+            `;
+
+            if (illegal.length === 0) {
+                resultHTML += `<div class="alert alert-success">부당 조항이 발견되지 않았습니다.</div>`;
+            } else {
+                for (let item of illegal) {
+                    resultHTML += `
+                        <div class="alert alert-danger">
+                            <div class="alert-title">${item.item.label}</div>
+                            <div class="alert-text">${item.item.law}</div>
+                            <div class="alert-law">"${item.line}"</div>
+                        </div>
+                    `;
+                }
+            }
+
+            resultHTML += `</div>`;
+            
+            document.getElementById('contract-result').innerHTML = resultHTML;
+        }
+
+        function checkCondition() {
+            const workHours = parseFloat(document.getElementById('cond-work-hours').value);
+            const breakTime = parseInt(document.getElementById('cond-break-time').value);
+            const isFired = document.getElementById('is-fired').checked;
+
+            let requiredBreak = 0;
+            if (workHours >= 8) requiredBreak = 60;
+            else if (workHours >= 4) requiredBreak = 30;
+
+            const breakViolation = breakTime < requiredBreak;
+
+            let resultHTML = `
+                <div class="result-card">
+                    <h3>근로조건 점검 결과</h3>
+                    
+                    <div class="section-header">
+                        <span class="section-header-icon">⏰</span>
+                        <span>휴게시간 점검</span>
+                    </div>
+            `;
+
+            if (breakViolation) {
+                resultHTML += `
+                    <div class="alert alert-danger">
+                        <div class="alert-title">휴게시간 부족</div>
+                        <div class="alert-text">법정 휴게시간: ${requiredBreak}분 | 실제: ${breakTime}분</div>
+                        <div class="alert-law">근로기준법 제54조 위반</div>
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="alert alert-success">
+                        <div class="alert-title">✅ 휴게시간 적정 (법정 ${requiredBreak}분)</div>
+                    </div>
+                `;
+            }
+
+            if (isFired) {
+                const noticeDays = parseInt(document.getElementById('notice-days').value);
+                const noticeMethod = document.getElementById('notice-method').value;
+                const dismissalReason = document.getElementById('dismissal-reason').value.trim();
+
+                resultHTML += `
+                    <div class="section-header" style="margin-top: 20px;">
+                        <span class="section-header-icon">📋</span>
+                        <span>해고 절차 점검</span>
+                    </div>
+                `;
+
+                if (noticeDays < 30) {
+                    resultHTML += `
+                        <div class="alert alert-danger">
+                            <div class="alert-title">30일 전 해고 예고 미준수</div>
+                            <div class="alert-text">해고예고수당(30일치 임금) 지급 필요</div>
+                            <div class="alert-law">근로기준법 제26조</div>
+                        </div>
+                    `;
+                } else {
+                    resultHTML += `
+                        <div class="alert alert-success">
+                            <div class="alert-title">✅ 해고 예고 기간 충족</div>
+                        </div>
+                    `;
+                }
+
+                const invalidMethods = ['구두', '전화', '문자', '이메일'];
+                if (invalidMethods.includes(noticeMethod)) {
+                    resultHTML += `
+                        <div class="alert alert-danger">
+                            <div class="alert-title">서면 통지 아님</div>
+                            <div class="alert-law">근로기준법 제27조 - 서면 통지 필요</div>
+                        </div>
+                    `;
+                } else if (noticeMethod === '서면') {
+                    resultHTML += `
+                        <div class="alert alert-success">
+                            <div class="alert-title">✅ 적절한 서면 통보</div>
+                        </div>
+                    `;
+                }
+
+                if (dismissalReason) {
+                    const unfairKeywords = [
+                        {keywords: ['여자', '남자', '나이', '외국인', '종교', '장애'], label: '차별적 해고', law: '근로기준법 제6조'},
+                        {keywords: ['마음에 안 들어', '그냥', '이유 없음', '태만', '능력 부족'], label: '정당한 이유 없는 해고', law: '근로기준법 제23조'}
+                    ];
+
+                    let unfairDetected = false;
+                    for (let item of unfairKeywords) {
+                        for (let kw of item.keywords) {
+                            if (dismissalReason.includes(kw)) {
+                                resultHTML += `
+                                    <div class="alert alert-danger">
+                                        <div class="alert-title">${item.label} 의심</div>
+                                        <div class="alert-text">감지된 키워드: "${kw}"</div>
+                                        <div class="alert-law">${item.law}</div>
+                                    </div>
+                                `;
+                                unfairDetected = true;
+                                break;
+                            }
+                        }
+                        if (unfairDetected) break;
+                    }
+
+                    if (!unfairDetected) {
+                        resultHTML += `
+                            <div class="alert alert-success">
+                                <div class="alert-title">특별한 부당해고 키워드가 감지되지 않았습니다.</div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            resultHTML += `</div>`;
+            
+            document.getElementById('condition-result').innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>
